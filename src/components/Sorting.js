@@ -12,7 +12,7 @@ export default class Sorting extends React.Component{
             array: [],
             max: 0,
             arraySize: 100,
-            speed: 0.005
+            speed: 0.005,
         };
         this.sliderMoveSize=this.sliderMoveSize.bind(this);
         this.sliderMoveSpeed=this.sliderMoveSpeed.bind(this);
@@ -33,7 +33,6 @@ export default class Sorting extends React.Component{
             maxTemp=Math.max(temp,maxTemp);
             arrayTemp.push(temp);
         }
-        console.log(arrayTemp);
         this.setState({
             array: arrayTemp,
             max: maxTemp
@@ -41,63 +40,73 @@ export default class Sorting extends React.Component{
     }
 
 
-    setHoverEnter(event){
-        const element=event.target;
-        const style=element.style;
-        style.backgroundColor="#A2DBFA";
-    }
-
-
-    setHoverExit(event){
-        const element= event.target;
-        const style=element.style;
-        style.backgroundColor="#39A2DB";
-    }
-
-
     sliderMoveSize(event){
-        this.setState({
-            arraySize: event.target.value
-        });
-        this.resetArray();
+        let {disable}=this.state;
+        console.log(disable);
+        if(!disable){
+            this.resetArray();
+            this.setState({
+                arraySize: event.target.value
+            });
+        }
     }
 
     
     sliderMoveSpeed(event){
         this.setState({
             speed: event.target.value
-        })
+        });
+        this.resetArray();
     }
 
+    
+    disableControls(){
+        let elements=document.getElementsByClassName("disable");
+        for(let i=0;i<elements.length;i++){
+            elements[i].setAttribute("disabled", `${true}`);
+        }
+    }
+
+    
+    enableControls(){
+        let elements=document.getElementsByClassName("disable");
+        for(let i=0;i<elements.length;i++){
+            elements[i].removeAttribute("disabled");
+        }
+    }
 
     mergeSort(){
+        this.disableControls();
         let {array}=this.state;
         let {max}=this.state;
         let {speed}=this.state;
         let animation=MergeSort.mergeSort(array);
         let arrayBars=document.getElementsByClassName("array-nums");
-        let step=0;
-        while(animation.length>0){
-            let element=animation.shift();
-            let colorChange=step%3!==2;
+        for(let i=0;i<animation.length;i++){
+            let colorChange=i%3!==2;
             if(colorChange){
-                let [barID1,barID2]=element;
+                let [barID1,barID2]=animation[i];
                 let barOneStyle=arrayBars[barID1].style;
                 let barTwoStyle=arrayBars[barID2].style;
-                let color=(step%3===0) ? "red" : "#39A2DB";
+                let color=(i%3===0) ? "red" : "#39A2DB";
                 setTimeout(()=>{
                     barOneStyle.backgroundColor=color;
                     barTwoStyle.backgroundColor=color;
-                }, step*1000*speed);
+                    if(i===animation.length-2){
+                        this.enableControls();
+                    }
+                }, i*1000*speed);
             }
             else{
                 setTimeout(()=>{
-                    let [barID1, newHeight]=element; 
+                    let [barID1, newHeight]=animation[i]; 
                     let barOneStyle=arrayBars[barID1].style;
                     barOneStyle.height=`${(newHeight/max)*100}%`;
-                }, step*1000*speed);
+                    if(i===animation.length-2){
+                        this.enableControls();
+                    }
+                }, i*1000*speed);
             }
-            step++;
         }
     }
 
@@ -108,9 +117,8 @@ export default class Sorting extends React.Component{
         let {speed}=this.state;
         let animation=BubbleSort.sort(array);
         let arrayBars=document.getElementsByClassName("array-nums");
-        let step=0;
-        while(animation.length>0){
-            let element=animation.shift();
+        for(let i=0;i<animation.length;i++){
+            let element=animation[i];
             let [choice, value1,value2]=element;
             if(choice==='r' || choice==='b' || choice==='f'){
                 let color;
@@ -119,7 +127,10 @@ export default class Sorting extends React.Component{
                     let barOneStyle=arrayBars[value1].style;
                     setTimeout(()=>{
                         barOneStyle.backgroundColor=color;
-                    }, step*1000*speed);
+                        if(i===animation.length-2){
+                            this.enableControls();
+                        }
+                    }, i*speed*1000);
                 }
                 else{
                     color= (choice==='r') ? "red" : "#39A2DB";
@@ -128,7 +139,10 @@ export default class Sorting extends React.Component{
                     setTimeout(()=>{
                         barOneStyle.backgroundColor=color;
                         barTwoStyle.backgroundColor=color;
-                    }, step*1000*speed);
+                        if(i===animation.length-2){
+                            this.enableControls();
+                        }
+                    }, i*speed*1000);
                 }
             }
             else{
@@ -137,9 +151,11 @@ export default class Sorting extends React.Component{
                 setTimeout(()=>{
                     barOneStyle.height=`${(value2/max)*100}%`;
                     barTwoStyle.height=`${(value1/max)*100}%`;
-                }, step*1000*speed);
+                    if(i===animation.length-2){
+                        this.enableControls();
+                    }
+                }, i*speed*1000);
             }
-            step++;
         }
     }
 
@@ -150,9 +166,9 @@ export default class Sorting extends React.Component{
         let {speed}=this.state;
         let animation=QuickSort.quickSort(array);
         let arrayBars=document.getElementsByClassName('array-nums');
-        let step=0;
-        while(animation.length>0){
-            let element=animation.shift();
+        this.disableControls();
+        for(let i=0;i<animation.length;i++){
+            let element=animation[i];   
             if(element[0]==='r'){
                 let [, id1,id2,id3]=element;
                 let barOneStyle=arrayBars[id1].style;
@@ -162,7 +178,11 @@ export default class Sorting extends React.Component{
                     barOneStyle.backgroundColor="lime";
                     barTwoStyle.backgroundColor="#E8F0F2";
                     barThreeStyle.backgroundColor="red";
-                }, step*1000*speed);
+                    console.log(`${typeof i}    ${ typeof animation.length}`);
+                    if(Number(i)==Number(animation.length-1)){
+                        this.enableControls();
+                    }
+                }, i*1000*speed);
             }
             else if(element[0]==='b'){
                 let bars=[];
@@ -172,8 +192,12 @@ export default class Sorting extends React.Component{
                 setTimeout(()=>{
                     for(let j=0;j<bars.length;j++){
                         bars[j].backgroundColor="#39A2DB";
+                        console.log(`${typeof i}    ${ typeof animation.length}`);
+                        if(Number(i)==Number(animation.length-1)){
+                            this.enableControls();
+                        }
                     }
-                }, step*1000*speed);
+                }, i*1000*speed);
             }
             else if(element[0]==='s'){
                 let [,id1,id2,val1,val2]=element;
@@ -182,9 +206,12 @@ export default class Sorting extends React.Component{
                 setTimeout(()=>{
                     barOneStyle.height=`${(val2/max)*100}%`;
                     barTwoStyle.height=`${(val1/max)*100}%`;
-                }, step*1000*speed);
+                    console.log(`${typeof i}    ${ typeof animation.length}`);
+                    if(Number(i)==Number(animation.length-1)){
+                        this.enableControls();
+                    }
+                }, i*1000*speed);
             }
-            step++;
         }
     }
     
@@ -197,20 +224,23 @@ export default class Sorting extends React.Component{
         return(
             <>
             <div className="header">
-                <div className='header-container'>
-                    <button className="header-button" onClick={()=>this.quickSort()}>New Array</button>
+                <div className='header-container header-main'>
+                    <p>VisuALGO</p>
                 </div>
                 <div className="header-container header-invis">
                     <p className="header-text">Array Size</p>
-                    <input type="range" min="5" max="100" value={arraySize} onChange={this.sliderMoveSize}/>
+                    <input className="disable" type="range" min="5" max="100" value={arraySize} onChange={this.sliderMoveSize} disabled={false}/>
                 </div>
                 <div className="header-container header-invis">
-                    <p className="header-text">Sort Speed</p>
-                    <input type="range" min="0.01" max="1" value={speed} onChange={this.sliderMoveSpeed} step="0.01"/>
+                    <p className="header-text">Sort Delay</p>
+                    <input className="disable" type="range" min="0.01" max="1" value={speed} onChange={this.sliderMoveSpeed} step="0.01" disabled={false}/>
                 </div>
-                <div className="header-container">
-                    <button className="header-button">Sort placeholder</button>
+                <div className="header-container header-sort">
+                    <button className="header-button disable" onClick={()=>this.mergeSort()}>Merge Sort</button>
+                    <button className="header-button disable" onClick={()=>this.bubbleSort()}>Bubble Sort</button>
+                    <button className="header-button disable" onClick={()=>this.quickSort()}>Quick Sort</button>
                 </div>
+
             </div>
             <div className='array-container'>
             {array.map((value, idx)=> {

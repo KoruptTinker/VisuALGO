@@ -31,21 +31,55 @@
     font-family: 'Dela Gothic One', cursive;
     font-size: 20px;
     background-color: #1A1A2E;
-    padding: 0;
     border: none;
     background: none;
+}
+
+.header-button:hover{
+    color: #A2DBFA;
+}
+
+.header-choice{
+    margin: 10px;
 }
 
 .header-container{
     justify-content: center;
     display: inline-block;
     width: 25%;
-    margin-top: 2%;
+    margin-bottom: 35px;
     vertical-align: middle;
+    border-top-style: solid;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border-color: #E94560;
+}
+
+.header-main{
+    font-size: 290%;
+    justify-content: center;
+    color: #E94560;
+    margin-top: 15px;
+    margin-bottom: 0px;
+}
+
+.header-main:hover{
+    color: #A2DBFA;
 }
 
 .header-text{
     color: #E94560;
+    vertical-align: middle;
+    font-size: 25px;
+    margin-top: 30px;
+}
+
+.header-text:hover{
+    color: #A2DBFA;
+}
+
+.header-sort{
+    border-top: none;
 }
 
 @media screen and (max-width: 768px){
@@ -55,9 +89,14 @@
 
     .header-container{
         width: 48%;
-        margin-top: 35px;
+        margin-top: 15px;
         margin-right: 2px;
         vertical-align: middle;
+    }
+
+    .header-main{
+        font-size: 30px;
+        margin-bottom: 35px;
     }
 }
 
