@@ -42,7 +42,6 @@ export default class Sorting extends React.Component{
 
     sliderMoveSize(event){
         let {disable}=this.state;
-        console.log(disable);
         if(!disable){
             this.resetArray();
             this.setState({
@@ -178,7 +177,6 @@ export default class Sorting extends React.Component{
                     barOneStyle.backgroundColor="lime";
                     barTwoStyle.backgroundColor="#E8F0F2";
                     barThreeStyle.backgroundColor="red";
-                    console.log(`${typeof i}    ${ typeof animation.length}`);
                     if(Number(i)==Number(animation.length-1)){
                         this.enableControls();
                     }
@@ -192,7 +190,6 @@ export default class Sorting extends React.Component{
                 setTimeout(()=>{
                     for(let j=0;j<bars.length;j++){
                         bars[j].backgroundColor="#39A2DB";
-                        console.log(`${typeof i}    ${ typeof animation.length}`);
                         if(Number(i)==Number(animation.length-1)){
                             this.enableControls();
                         }
@@ -206,7 +203,6 @@ export default class Sorting extends React.Component{
                 setTimeout(()=>{
                     barOneStyle.height=`${(val2/max)*100}%`;
                     barTwoStyle.height=`${(val1/max)*100}%`;
-                    console.log(`${typeof i}    ${ typeof animation.length}`);
                     if(Number(i)==Number(animation.length-1)){
                         this.enableControls();
                     }
